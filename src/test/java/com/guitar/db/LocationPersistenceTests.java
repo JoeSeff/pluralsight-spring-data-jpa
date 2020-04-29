@@ -1,12 +1,7 @@
 package com.guitar.db;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.guitar.db.repository.LocationRepository;
+import com.guitar.db.model.Location;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +9,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.guitar.db.model.Location;
-import com.guitar.db.repository.LocationRepository;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations={"classpath:com/guitar/db/applicationTests-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LocationPersistenceTests {
 	@Autowired
 	private LocationRepository locationRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Test
 	@Transactional
@@ -33,17 +26,13 @@ public class LocationPersistenceTests {
 		location.setCountry("Canada");
 		location.setState("British Columbia");
 		location = locationRepository.create(location);
-		
-		// clear the persistence context so we don't return the previously cached location object
-		// this is a test only thing and normally doesn't need to be done in prod code
-		entityManager.clear();
 
 		Location otherLocation = locationRepository.find(location.getId());
 		assertEquals("Canada", otherLocation.getCountry());
 		assertEquals("British Columbia", otherLocation.getState());
 		
 		//delete BC location now
-		locationRepository.delete(otherLocation);
+        locationRepository.delete(otherLocation);
 	}
 
 	@Test

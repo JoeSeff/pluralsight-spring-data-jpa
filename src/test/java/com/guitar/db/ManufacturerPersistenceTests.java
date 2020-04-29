@@ -1,18 +1,17 @@
 package com.guitar.db;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Date;
-import java.util.List;
-
+import com.guitar.db.repository.ManufacturerRepository;
+import com.guitar.db.model.Manufacturer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.guitar.db.model.Manufacturer;
-import com.guitar.db.repository.ManufacturerRepository;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations={"classpath:com/guitar/db/applicationTests-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
