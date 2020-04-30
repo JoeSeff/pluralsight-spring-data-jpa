@@ -33,6 +33,7 @@ build/
 
 ### MISC ###
 *.class
+*.lock.db
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

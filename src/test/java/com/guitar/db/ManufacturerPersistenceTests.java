@@ -1,5 +1,6 @@
 package com.guitar.db;
 
+import com.guitar.db.repository.ManufacturerJpaRepository;
 import com.guitar.db.repository.ManufacturerRepository;
 import com.guitar.db.model.Manufacturer;
 import org.junit.Test;
@@ -17,11 +18,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ManufacturerPersistenceTests {
 	@Autowired
+	private ManufacturerJpaRepository manufacturerJpaRepository;
+
+	@Autowired
 	private ManufacturerRepository manufacturerRepository;
 
 	@Test
 	public void testGetManufacturersFoundedBeforeDate() throws Exception {
-		List<Manufacturer> mans = manufacturerRepository.getManufacturersFoundedBeforeDate(new Date());
+		List<Manufacturer> mans = manufacturerJpaRepository.findByFoundedDateBefore(new Date());
 		assertEquals(2, mans.size());
 	}
 

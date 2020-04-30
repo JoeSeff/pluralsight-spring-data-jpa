@@ -1,10 +1,15 @@
 package com.guitar.db;
 
 import com.guitar.db.model.Model;
+import com.guitar.db.repository.ModelJpaRepository;
 import com.guitar.db.repository.ModelRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +20,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ContextConfiguration(locations={"classpath:com/guitar/db/applicationTests-context.xml"})
+@ContextConfiguration(locations = {"classpath:com/guitar/db/applicationTests-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ModelPersistenceTests {
+	@Autowired
+	private ModelJpaRepository modelJpaRepository;
+
 	@Autowired
 	private ModelRepository modelRepository;
 
@@ -43,14 +51,17 @@ public class ModelPersistenceTests {
 
 	@Test
 	public void testGetModelsInPriceRange() throws Exception {
-		List<Model> mods = modelRepository.getModelsInPriceRange(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L));
+		List<Model> mods = modelJpaRepository.findByPriceGreaterThanEqualAndPriceLessThanEqual(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L));
 		assertEquals(4, mods.size());
 	}
 
 	@Test
 	public void testGetModelsByPriceRangeAndWoodType() throws Exception {
-		List<Model> mods = modelRepository.getModelsByPriceRangeAndWoodType(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L), "Maple");
-		assertEquals(3, mods.size());
+		Sort sort = new Sort(Sort.Direction.ASC, "name");
+		Pageable pageable = new PageRequest(0, 5);
+		Page<Model> mods = modelJpaRepository.queryByPriceRangeAndWoodType(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L),
+				"Maple", pageable);
+		assertEquals(5, mods.getSize());
 	}
 
 	@Test
